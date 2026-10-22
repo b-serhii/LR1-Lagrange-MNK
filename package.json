@@ -1,0 +1,11 @@
+{
+  "name": "lr1-interpolation-least-squares",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Лабораторна робота № 1 — апроксимація функцій, варіант 1",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node --test tests/*.test.js"
+  }
+}

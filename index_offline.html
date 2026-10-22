@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F6F8FC">
+  <meta name="description" content="Лабораторна робота №1: інтерактивне порівняння інтерполяції Лагранжа та МНК для 5, 10 і 20 точок.">
+  <title>Апроксимація функцій · ЛР № 1</title>
+  <style>:root{--bg:#f6f8fc;--white:#fff;--ink:#1e304f;--muted:#73829b;--border:#e3e9f2;--purple:#7865df;--teal:#0b8f86;--gold:#e0a250}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b6abf5;outline-offset:2px}.topbar{height:76px;background:white;border-bottom:1px solid var(--border)}.topbar-inner{max-width:1310px;height:100%;padding:0 24px;margin:auto;display:flex;align-items:center;gap:12px}.mark{height:40px;width:40px;border-radius:11px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:19px;font-weight:800;letter-spacing:-1px}.mark span{font-size:11px;color:#77ece2}.brand{display:flex;flex-direction:column;line-height:1.35}.brand strong{font-size:15px}.brand small{font-size:11px;color:var(--muted)}.spacer{flex:1}.top-badge{background:#f1f4fa;border:1px solid var(--border);padding:7px 13px;border-radius:18px;font-size:12px}.container{max-width:1310px;padding:36px 24px 16px;margin:auto}.eyebrow,.section-kicker{font-size:10px;letter-spacing:2px;font-weight:800;color:var(--purple);margin:0 0 8px}.intro{padding:0 0 23px}.title-line{display:flex;justify-content:space-between;align-items:center}.intro h1{margin:0;font-size:31px;line-height:1.25;letter-spacing:-.8px;font-weight:800}.intro p:not(.eyebrow){margin:8px 0 0;color:var(--muted);font-size:14px}.intro-bubble{font-weight:800;color:#dfd8ff;font-size:74px;line-height:1;margin-right:20px}.notice{display:flex;gap:13px;align-items:flex-start;background:#fdf9ef;border:1px solid #f0dfb7;border-radius:11px;padding:12px 17px;margin-bottom:18px;color:#795c23}.notice>span{font-size:20px;line-height:1.25}.notice strong{font-size:12px}.notice p{font-size:12px;line-height:1.5;margin:2px 0 0}.toolbar,.panel,.stat,.mini-card{background:var(--white);border:1px solid var(--border);border-radius:13px;box-shadow:0 5px 24px #20335108}.toolbar{padding:17px 21px;display:flex;flex-wrap:wrap;align-items:end;gap:21px}.toolbar-section{display:flex;flex-direction:column;gap:8px}.toolbar-section label{font-size:11px;font-weight:700;color:#71809b}.toolbar select{height:38px;min-width:171px;padding:0 12px;background:#fbfcff;border-radius:7px;border:1px solid var(--border);font-weight:600;color:var(--ink)}.segmented{background:#f2f5fa;border-radius:8px;padding:4px;display:flex;gap:3px}.seg{height:31px;min-width:57px;border:0;background:none;border-radius:5px;font-weight:700;color:#7785a0}.seg.active{background:#fff;color:var(--purple);box-shadow:0 1px 6px #20335120}.toolbar-actions{margin-left:auto}.actions{display:flex;gap:7px}.button{border-radius:8px;border:1px solid transparent;padding:10px 13px;white-space:nowrap;font-weight:700;font-size:12px;line-height:1.3}.button.secondary{background:#f4f1ff;color:#6553c2;border-color:#e7e0ff}.button.secondary:hover{background:#e9e2ff}.button.ghost{background:#f1f3f7;color:#77839a}.button.primary{background:var(--purple);color:#fff}.button.primary:hover{background:#604cce}.button.linklike{background:none;color:var(--purple);border:none}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:17px 0}.stat{padding:18px 19px;display:flex;flex-direction:column;gap:2px}.stat>span{font-size:11px;color:var(--muted);font-weight:650}.stat strong{font-size:27px;line-height:1.45;letter-spacing:-.6px;font-weight:800}.stat small{font-size:10px;color:#a0acc0}.panel{padding:23px 24px;margin-bottom:18px}.panel-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.panel-top h2,.section-heading h2{font-size:20px;line-height:1.3;margin:0;letter-spacing:-.4px}.panel-top .section-kicker,.section-heading .section-kicker{margin-bottom:5px}.label-muted{font-size:12px;color:var(--muted);background:#f4f6fa;border-radius:15px;padding:6px 12px}.chart-holder{width:100%;margin-top:9px}.plot{display:block;max-width:100%;width:100%;height:auto;overflow:visible}.chart-tick{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#8a98af}.axis-name{font:700 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#6c7c97}.point-dot{cursor:crosshair}.legend{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin:2px 0 7px}.legend>span{font-size:11px;color:#61728f;display:flex;align-items:center;gap:7px}.legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#26385c}.legend-dot.synthetic{background:var(--gold)}.legend-line{width:21px;border-top:3px solid;display:inline-block}.legend-line.lag{border-color:var(--purple)}.legend-line.lsm{border-color:var(--teal)}.legend-line.residual{border-top:2px dashed var(--teal)}.plot-footer{border-top:1px solid var(--border);font-size:11px;color:#91a0b5;text-align:center;margin-top:18px;padding-top:13px}.section-heading{display:flex;align-items:end;justify-content:space-between;margin:28px 0 16px}.section-heading p:not(.section-kicker){margin:6px 0 0;font-size:12px;color:var(--muted)}.small-tag{background:#eae7ff;color:#6855c8;padding:7px 10px;border-radius:6px;font-size:11px;font-weight:700}.mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.mini-card{padding:15px 17px 7px;min-width:0}.mini-header{display:flex;justify-content:space-between;align-items:center;gap:10px}.mini-header strong{font-size:14px}.mini-header span{font-size:10px;color:var(--muted)}.mini-card .chart-holder{margin-top:1px}.two-column{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:22px}.two-column .panel{min-width:0;margin-bottom:0}.muted{font-size:12px;color:var(--muted);line-height:1.55;margin:9px 0}.table-wrap{overflow:auto;margin-top:16px}table{width:100%;border-collapse:collapse;text-align:left;font-size:12px}th{background:#f4f6fa;color:#8391aa;font-weight:750;padding:11px 10px}td{padding:12px 10px;border-bottom:1px solid var(--border);font-weight:650;font-variant-numeric:tabular-nums}tr.selected td{background:#f5f2ff;color:#6953bd}th:first-child,td:first-child{border-radius:5px 0 0 5px}.formula{margin-top:17px;border-top:1px solid var(--border);padding-top:14px}.formula span{display:block;font-size:11px;color:var(--muted);font-weight:750}.formula code{display:block;white-space:normal;overflow-wrap:anywhere;color:#53678a;margin-top:6px;font-size:11px}.editor-panel{margin-top:20px}.editor-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,280px);gap:22px;margin-top:15px}textarea{resize:vertical;width:100%;border:1px solid var(--border);border-radius:9px;background:#fbfcfe;color:#405270;padding:14px;font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}h3{font-size:14px;margin:0}.editor-aside ol{font-size:12px;color:#6e7e96;padding-left:20px;line-height:1.9}.validation{color:#b53646;font-size:12px;min-height:18px}footer{display:flex;justify-content:space-between;gap:10px;padding:27px 0 10px;color:#98a6ba;font-size:11px}@media (max-width:1000px){.toolbar-actions{margin-left:0}.toolbar{gap:14px}.two-column{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media (max-width:650px){.container{padding:22px 13px}.topbar-inner{padding:0 13px}.top-badge{font-size:10px}.intro h1{font-size:25px}.intro-bubble{display:none}.toolbar{padding:14px}.toolbar-section{width:100%}.toolbar select{width:100%}.toolbar .segmented{width:100%}.toolbar .seg{flex:1}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:23px}.panel{padding:14px}.mini-grid{grid-template-columns:1fr}.editor-wrap{grid-template-columns:1fr}.panel-top h2,.section-heading h2{font-size:17px}.legend{gap:9px}.legend>span{font-size:10px}footer{flex-direction:column}}
+</style>
+  
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="mark" aria-hidden="true">f<span>(x)</span></div>
+      <div class="brand"><strong>Лабораторна № 1</strong><small>Чисельні методи · Варіант 1</small></div>
+      <div class="spacer"></div>
+      <span class="top-badge">Бойог Сергій Степанович</span>
+    </div>
+  </header>
+  <main class="container">
+    <section class="intro">
+      <p class="eyebrow">ІНТЕРАКТИВНА ЛАБОРАТОРІЯ</p>
+      <div class="title-line"><div><h1>Інтерполяція та апроксимація</h1><p>Дослідження полінома Лагранжа і методу найменших квадратів на однакових даних.</p></div><div class="intro-bubble" aria-hidden="true">∑</div></div>
+    </section>
+    <div id="info-notice" class="notice"><span aria-hidden="true">ⓘ</span><div><strong>Примітка до вихідних даних</strong><p>В Excel-аркуші «10 точок» для варіанта 1 фактично 8 пар. Ще 2 точки (8; 11,39) і (9; 12,68) розраховано лінійним МНК і позначено золотистим кольором.</p></div></div>
+    <section class="toolbar" aria-label="Налаштування дослідження">
+      <div class="toolbar-section"><label>Кількість точок</label><div class="segmented" role="group" aria-label="Набір даних"><button class="seg active" data-size="5" aria-pressed="true">5</button><button class="seg" data-size="10" aria-pressed="false">10</button><button class="seg" data-size="20" aria-pressed="false">20</button></div></div>
+      <div class="toolbar-section"><label for="method">Режим відображення</label><select id="method"><option value="both">Усі методи</option><option value="lag">Інтерполяція</option><option value="lsm">МНК</option></select></div>
+      <div class="toolbar-section"><label for="degree">Ступінь полінома МНК</label><select id="degree"><option value="1">1 — лінійний</option><option value="2" selected>2 — квадратичний</option><option value="3">3 — кубічний</option><option value="4">4 — четвертого ступеня</option></select></div>
+      <div class="toolbar-section toolbar-actions"><label>Анімація</label><div class="actions"><button class="button secondary" id="animate-lag"><span>▶</span> Лагранж</button><button class="button secondary" id="animate-lsm"><span>▶</span> МНК</button><button class="button ghost" id="stop-animation" title="Зупинити анімацію">■</button></div></div>
+    </section>
+    <section class="stats" aria-live="polite">
+      <div class="stat"><span>Вузлів вибірки</span><strong id="stat-count">5</strong><small id="stat-type">Первинні дані</small></div>
+      <div class="stat"><span>RMSE · МНК</span><strong id="stat-rmse">—</strong><small>Середньоквадратична похибка</small></div>
+      <div class="stat"><span>R² · МНК</span><strong id="stat-r2">—</strong><small>Якість наближення</small></div>
+      <div class="stat"><span>Максимальна похибка · МНК</span><strong id="stat-max">—</strong><small>Абсолютне відхилення</small></div>
+    </section>
+    <section class="panel main-plot">
+      <div class="panel-top"><div><p class="section-kicker">ДЕТАЛЬНИЙ ПЕРЕГЛЯД</p><h2>Графік для <span id="chart-size">5</span> точок</h2></div><span id="animation-status" class="label-muted">Готово до дослідження</span></div>
+      <div id="main-chart" class="chart-holder"></div>
+      <div class="legend"><span><i class="legend-dot original"></i> Вихідні точки</span><span><i class="legend-line lag"></i> Поліном Лагранжа</span><span><i class="legend-line lsm"></i> Поліном МНК</span><span><i class="legend-line residual"></i> Відхилення</span><span><i class="legend-dot synthetic"></i> Обчислені точки</span></div>
+      <div class="plot-footer">Масштаб X та Y визначається автоматично за видимими даними та кривими. Наведіть курсор на точки, щоб переглянути координати й залишки.</div>
+    </section>
+    <section class="section-heading"><div><p class="section-kicker">ЗІСТАВЛЕННЯ РЕЗУЛЬТАТІВ</p><h2>Усі 6 графіків</h2><p>Для кожного набору побудовано окремі графіки інтерполяції та МНК.</p></div><span class="small-tag">3 вибірки × 2 методи</span></section>
+    <section class="mini-grid" id="six-charts" aria-label="Шість порівняльних графіків"></section>
+    <section class="two-column">
+      <article class="panel"><div class="panel-top"><div><p class="section-kicker">ПОХИБКИ МОДЕЛІ</p><h2>Залишки МНК</h2></div></div><div id="residual-chart" class="chart-holder"></div><p class="muted">Вертикальна лінія показує різницю y − ŷ для кожної точки.</p></article>
+      <article class="panel metrics"><div class="panel-top"><div><p class="section-kicker">АНАЛІТИЧНЕ ТЕСТУВАННЯ</p><h2>Порівняння вибірок</h2></div><button class="button linklike" id="download-metrics">↓ CSV</button></div><div class="table-wrap"><table><thead><tr><th>Точок</th><th>RMSE</th><th>MAE</th><th>R²</th></tr></thead><tbody id="metrics-body"></tbody></table></div><p class="muted">Обчислення виконуються незалежно для кожної вибірки за обраним ступенем МНК.</p><div class="formula"><span>Модель МНК</span><code id="model-formula">—</code></div></article>
+    </section>
+    <section class="panel editor-panel">
+      <div class="panel-top"><div><p class="section-kicker">ВХІДНІ ДАНІ</p><h2>Перегляд і редагування точок</h2></div><button class="button linklike" id="reset-data">↺ Відновити варіант</button></div>
+      <p class="muted">Кожний рядок: <code>x, y</code>. Можна ввести власні координати, кількість має збігатися з вибраною (5, 10 або 20). Усі x повинні бути різними.</p>
+      <div class="editor-wrap"><textarea id="points-input" spellcheck="false" rows="9" aria-label="Координати точок"></textarea><div class="editor-aside"><h3>Порядок роботи</h3><ol><li>Оберіть набір 5, 10 або 20 точок.</li><li>Перегляньте побудовані графіки.</li><li>Змініть ступінь полінома МНК.</li><li>Запустіть покрокову анімацію.</li><li>За потреби внесіть власні дані.</li></ol><button class="button primary" id="apply-points">Застосувати точки →</button><p id="input-error" class="validation" role="alert"></p></div></div>
+    </section>
+    <footer><div>Лабораторна робота № 1 · Варіант 1 · ІПЗ-4</div><div>HTML · CSS · JavaScript · QR-розкладання</div></footer>
+  </main>
+<script>
+// Варіант 1. Джерело: «Варіанти до ЛР № 1.xlsx».
+// В аркуші «10 точок» є лише 8 пар. Останні дві точки нижче
+// явно позначені як розрахункові: це лінійний МНК-прогноз із 8 оригінальних пар,
+// округлений до 2 знаків. Не видаємо їх за дані з методички.
+const originalSets = {
+  5: [
+    [1, 2.1], [2, 3.9], [3, 6.2], [4, 8.1], [5, 10.5]
+  ],
+  10: [
+    [0, 1.2], [1, 2.3], [2, 3.5], [3, 4.8], [4, 6.2],
+    [5, 7.5], [6, 8.9], [7, 10.1]
+  ],
+  20: [
+    [0, 1.1], [0.5, 1.4], [1, 2.2], [1.5, 2.8], [2, 3.5],
+    [2.5, 4.1], [3, 4.9], [3.5, 5.2], [4, 6.1], [4.5, 6.7],
+    [5, 7.3], [5.5, 7.8], [6, 8.5], [6.5, 9.2], [7, 10.1],
+    [7.5, 10.4], [8, 11.2], [8.5, 11.9], [9, 12.5], [9.5, 13.1]
+  ]
+};
+
+const computedTen = [[8, 11.39], [9, 12.68]];
+
+function initialSets() {
+  return {
+    5: originalSets[5].map(([x, y]) => ({ x, y, origin: 'original' })),
+    10: [...originalSets[10].map(([x, y]) => ({ x, y, origin: 'original' })),
+      ...computedTen.map(([x, y]) => ({ x, y, origin: 'calculated' }))],
+    20: originalSets[20].map(([x, y]) => ({ x, y, origin: 'original' }))
+  };
+}
+
+/** Чисті чисельні функції для інтерполяції та МНК. Без сторонніх бібліотек. */
+function checkPoints(points, expectedCount = null) {
+  if (!Array.isArray(points) || points.length < 2) throw new Error('Потрібно щонайменше дві точки.');
+  if (expectedCount !== null && points.length !== expectedCount) {
+    throw new Error(`Потрібно рівно ${expectedCount} точок, отримано ${points.length}.`);
+  }
+  for (const p of points) {
+    if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) throw new Error('Координати мають бути скінченними числами.');
+  }
+  const xs = new Set(points.map(p => p.x));
+  if (xs.size !== points.length) throw new Error('Координати x повинні бути різними.');
+  return points.slice().sort((a, b) => a.x - b.x);
+}
+
+/** Нормалізовані барицентричні ваги Лагранжа; O(n²). */
+function barycentricWeights(points) {
+  const n = points.length;
+  const signs = Array(n).fill(1), logs = Array(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (i === j) continue;
+      const diff = points[i].x - points[j].x;
+      if (diff === 0) throw new Error('Повторювані x недопустимі.');
+      if (diff < 0) signs[i] = -signs[i];
+      logs[i] -= Math.log(Math.abs(diff));
+    }
+  }
+  const maxLog = Math.max(...logs);
+  return logs.map((v, i) => signs[i] * Math.exp(v - maxLog));
+}
+
+function createLagrange(inputPoints) {
+  const points = checkPoints(inputPoints);
+  const weights = barycentricWeights(points);
+  const range = Math.max(1, points[points.length - 1].x - points[0].x);
+  return (x) => {
+    // Повернення точного вузлового значення усуває похибку 0/0.
+    for (const p of points) if (Math.abs(p.x - x) <= 1e-13 * range) return p.y;
+    let numerator = 0, denominator = 0;
+    for (let i = 0; i < points.length; i++) {
+      const term = weights[i] / (x - points[i].x);
+      numerator += term * points[i].y;
+      denominator += term;
+    }
+    const y = numerator / denominator;
+    return Number.isFinite(y) ? y : NaN;
+  };
+}
+
+/** Розв'язує найменші квадрати через Householder QR, а не нормальні рівняння. */
+function solveLeastSquaresQR(matrix, values) {
+  const rows = matrix.length, cols = matrix[0].length;
+  if (rows < cols || values.length !== rows) throw new Error('Несумісна розмірність дизайн-матриці.');
+  const A = matrix.map(row => row.slice());
+  const b = values.slice();
+  for (let k = 0; k < cols; k++) {
+    let norm = 0;
+    for (let i = k; i < rows; i++) norm = Math.hypot(norm, A[i][k]);
+    if (norm < 1e-13) throw new Error('Матриця вироджена — зменште ступінь полінома.');
+    const sign = A[k][k] >= 0 ? 1 : -1;
+    const v = Array(rows - k);
+    v[0] = A[k][k] + sign * norm;
+    for (let i = k + 1; i < rows; i++) v[i - k] = A[i][k];
+    let vv = 0;
+    for (const vi of v) vv += vi * vi;
+    if (!vv) throw new Error('Некоректне QR-розкладання.');
+    const factor = 2 / vv;
+    for (let j = k; j < cols; j++) {
+      let dot = 0;
+      for (let i = k; i < rows; i++) dot += v[i - k] * A[i][j];
+      dot *= factor;
+      for (let i = k; i < rows; i++) A[i][j] -= dot * v[i - k];
+    }
+    let dotb = 0;
+    for (let i = k; i < rows; i++) dotb += v[i - k] * b[i];
+    dotb *= factor;
+    for (let i = k; i < rows; i++) b[i] -= dotb * v[i - k];
+  }
+  const solution = Array(cols).fill(0);
+  for (let i = cols - 1; i >= 0; i--) {
+    let v = b[i];
+    for (let j = i + 1; j < cols; j++) v -= A[i][j] * solution[j];
+    if (Math.abs(A[i][i]) < 1e-13) throw new Error('Неможливо розв’язати систему.');
+    solution[i] = v / A[i][i];
+  }
+  return solution;
+}
+
+function fitLeastSquares(inputPoints, degree = 2) {
+  const points = checkPoints(inputPoints);
+  if (!Number.isInteger(degree) || degree < 1 || degree >= points.length) {
+    throw new Error('Ступінь МНК має бути від 1 до n−1.');
+  }
+  const center = (points[0].x + points[points.length - 1].x) / 2;
+  const scale = (points[points.length - 1].x - points[0].x) / 2;
+  const matrix = points.map(p => {
+    const t = (p.x - center) / scale;
+    const row = [1];
+    for (let k = 1; k <= degree; k++) row.push(row[k - 1] * t);
+    return row;
+  });
+  const coefficients = solveLeastSquaresQR(matrix, points.map(p => p.y));
+  const predict = x => {
+    const t = (x - center) / scale;
+    let result = 0;
+    for (let i = coefficients.length - 1; i >= 0; i--) result = result * t + coefficients[i];
+    return result;
+  };
+  return { degree, coefficients, center, scale, predict, matrix };
+}
+
+function getMetrics(points, predict) {
+  const errors = points.map(p => p.y - predict(p.x));
+  const sse = errors.reduce((sum, e) => sum + e * e, 0);
+  const rmse = Math.sqrt(sse / points.length);
+  const mae = errors.reduce((sum, e) => sum + Math.abs(e), 0) / points.length;
+  const maxError = Math.max(...errors.map(Math.abs));
+  const average = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+  const sst = points.reduce((sum, p) => sum + (p.y - average) ** 2, 0);
+  return { sse, rmse, mae, maxError, r2: sst > 1e-15 ? 1 - sse / sst : (sse < 1e-15 ? 1 : 0), errors };
+}
+
+function buildSample(points, predict, steps = 280) {
+  const minX = points[0].x, maxX = points[points.length - 1].x;
+  return Array.from({ length: steps + 1 }, (_, i) => {
+    const x = minX + (maxX - minX) * i / steps;
+    return { x, y: predict(x) };
+  });
+}
+
+function parsePoints(text, size) {
+  const lines = text.trim().split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  const parsed = lines.map((line, idx) => {
+    const parts = line.split(/[;\s,]+/).filter(Boolean);
+    if (parts.length !== 2) throw new Error(`Рядок ${idx + 1}: введіть два числа через кому або пробіл.`);
+    const x = Number(parts[0]), y = Number(parts[1]);
+    return { x, y, origin: 'custom' };
+  });
+  return checkPoints(parsed, size);
+}
+
+const colors = { lag: '#7865DF', lsm: '#0B8F86', original: '#26385C', calculated: '#E0A250', custom: '#26385C' };
+function nfmt(v, places=2) { return Number(v.toFixed(places)).toLocaleString('uk-UA'); }
+function fmtTick(x){ if(Math.abs(x)>=1000) return nfmt(x,0); if(Math.abs(x)>=10) return nfmt(x,1); return nfmt(x,2); }
+function niceBounds(values) {
+  const finite = values.filter(Number.isFinite);
+  if (!finite.length) return [-1, 1];
+  let a = Math.min(...finite), b = Math.max(...finite);
+  const delta = b - a || Math.max(1, Math.abs(a)*0.15);
+  a -= delta * 0.12; b += delta * 0.12;
+  return [a,b];
+}
+function path(sample, tx, ty) {
+  let s = '', open=false;
+  for (const p of sample) {
+    if (!Number.isFinite(p.y)) { open=false; continue; }
+    s += `${open ? 'L' : 'M'}${tx(p.x).toFixed(2)},${ty(p.y).toFixed(2)} `;
+    open=true;
+  }
+  return s.trim();
+}
+function drawChart(node, config) {
+  const { points, lagSample=[], lsmSample=[], mode='both', small=false, activeIndex=-1, lsmProgress=1, residualProgress=1 } = config;
+  const visiblePoints = config.visibleCount === undefined ? points : points.slice(0, config.visibleCount);
+  const W=small ? 520 : 960, H=small ? 244 : 378;
+  const margin={ top: small?17:28, right:small?17:28, bottom:small?34:45, left:small?50:67};
+  const PW=W-margin.left-margin.right, PH=H-margin.top-margin.bottom;
+  const drawLag = mode==='both'||mode==='lag';
+  const drawLsm = mode==='both'||mode==='lsm';
+  const minX=points[0].x, maxX=points[points.length-1].x;
+  // Автоматично визначаємо Y за усіма видимими кривими та точками, включно з проміжними кадрами.
+  const allY=[...visiblePoints.map(p=>p.y)];
+  if(drawLag) allY.push(...lagSample.map(p=>p.y));
+  const meanY = points.reduce((sum,p)=>sum+p.y,0)/points.length;
+  const adjustedLsm = lsmSample.map(p=>({x:p.x,y:meanY+(p.y-meanY)*lsmProgress}));
+  if(drawLsm) allY.push(...adjustedLsm.map(p=>p.y));
+  const [ymin,ymax]=niceBounds(allY);
+  const xwidth=maxX-minX;
+  const tx=x=>margin.left+(x-minX)/xwidth*PW;
+  const ty=y=>margin.top+(ymax-y)/(ymax-ymin)*PH;
+  let markup='';
+  for(let i=0;i<=5;i++){
+    const y=margin.top+PH*i/5, val=ymax-(ymax-ymin)*i/5;
+    markup+=`<line x1="${margin.left}" y1="${y}" x2="${W-margin.right}" y2="${y}" stroke="#E5EAF2" stroke-dasharray="3 5"/>`;
+    markup+=`<text x="${margin.left-9}" y="${y+4}" text-anchor="end" class="chart-tick">${fmtTick(val)}</text>`;
+  }
+  for(let i=0;i<=5;i++){
+    const x=margin.left+PW*i/5, val=minX+xwidth*i/5;
+    markup+=`<line x1="${x}" y1="${margin.top}" x2="${x}" y2="${H-margin.bottom}" stroke="#E5EAF2" stroke-dasharray="3 5"/>`;
+    markup+=`<text x="${x}" y="${H-margin.bottom+21}" text-anchor="middle" class="chart-tick">${fmtTick(val)}</text>`;
+  }
+  markup+=`<line x1="${margin.left}" y1="${H-margin.bottom}" x2="${W-margin.right}" y2="${H-margin.bottom}" stroke="#A2AEC2"/>`;
+  markup+=`<line x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${H-margin.bottom}" stroke="#A2AEC2"/>`;
+  markup+=`<text x="${W-margin.right}" y="${H-5}" text-anchor="end" class="axis-name">X</text>`;
+  markup+=`<text x="15" y="${margin.top+1}" class="axis-name">Y</text>`;
+  if(drawLag && lagSample.length) markup+=`<path d="${path(lagSample,tx,ty)}" fill="none" stroke="${colors.lag}" stroke-width="${small?2.5:3.2}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  if(drawLsm && adjustedLsm.length) markup+=`<path d="${path(adjustedLsm,tx,ty)}" fill="none" stroke="${colors.lsm}" stroke-width="${small?2.5:3.2}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  if(drawLsm && residualProgress>0 && lsmSample.length && config.predict){
+    const count=Math.ceil(points.length*residualProgress);
+    for(const p of points.slice(0,count)) {
+      const yy=meanY+(config.predict(p.x)-meanY)*lsmProgress;
+      markup+=`<line x1="${tx(p.x)}" x2="${tx(p.x)}" y1="${ty(p.y)}" y2="${ty(yy)}" stroke="${colors.lsm}" stroke-width="1.7" opacity="0.6" stroke-dasharray="4 3"/>`;
+    }
+  }
+  visiblePoints.forEach((p,i)=>{
+    const r=i===activeIndex?(small?6:8):(small?3.5:5);
+    const fill= i===activeIndex?colors.lag:colors[p.origin]||colors.original;
+    const error=config.predict? p.y-config.predict(p.x):0;
+    markup+=`<circle cx="${tx(p.x)}" cy="${ty(p.y)}" r="${r}" fill="${fill}" stroke="white" stroke-width="${small?1:2}" class="point-dot"><title>x = ${nfmt(p.x,3)}; y = ${nfmt(p.y,3)}; залишок МНК = ${nfmt(error,4)}${p.origin==='calculated'?'; додано розрахунком':''}</title></circle>`;
+  });
+  node.innerHTML=`<svg class="plot" viewBox="0 0 ${W} ${H}" role="img" aria-label="Графік інтерполяції та МНК" xmlns="http://www.w3.org/2000/svg">${markup}</svg>`;
+}
+function drawResidual(node,points,predict){
+  const W=960,H=220, m={top:20,bottom:34,left:67,right:28};
+  const minX=points[0].x,maxX=points[points.length-1].x;
+  const errs=points.map(p=>p.y-predict(p.x));
+  const size=Math.max(...errs.map(Math.abs),0.01)*1.22;
+  const tx=x=>m.left+(x-minX)/(maxX-minX)*(W-m.left-m.right);
+  const ty=e=>m.top+(size-e)/(2*size)*(H-m.top-m.bottom);
+  let s=`<line x1="${m.left}" y1="${ty(0)}" x2="${W-m.right}" y2="${ty(0)}" stroke="#8391a5" stroke-width="1.5"/><text x="${m.left-12}" y="${ty(0)+4}" text-anchor="end" class="chart-tick">0</text>`;
+  for(let i=0;i<=4;i++) { const val=size-(2*size)*i/4; const y=ty(val); s+=`<line x1="${m.left}" y1="${y}" x2="${W-m.right}" y2="${y}" stroke="#E5EAF2" stroke-dasharray="3 5"/><text x="${m.left-12}" y="${y+4}" text-anchor="end" class="chart-tick">${fmtTick(val)}</text>`; }
+  points.forEach((p,i)=> { const x=tx(p.x),y=ty(errs[i]);s+=`<line x1="${x}" x2="${x}" y1="${ty(0)}" y2="${y}" stroke="${colors.lsm}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="4" fill="${colors.lsm}"><title>x=${nfmt(p.x,3)}, залишок=${nfmt(errs[i],4)}</title></circle>`; });
+  s+=`<text x="${W-m.right}" y="${H-4}" text-anchor="end" class="axis-name">X</text>`;
+  node.innerHTML=`<svg class="plot" viewBox="0 0 ${W} ${H}" role="img" aria-label="Діаграма залишків МНК" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+
+
+
+const $ = selector => document.querySelector(selector);
+let sets=initialSets(), selected=5,degree=2,mode='both',token=0;
+const format=(x,p=4) => Number(x.toFixed(p)).toLocaleString('uk-UA',{minimumFractionDigits:p,maximumFractionDigits:p});
+const model = size => {
+  const points=checkPoints(sets[size]);
+  const lag=createLagrange(points), lsm=fitLeastSquares(points,degree);
+  return {points,lag,lsm,lagCurve:buildSample(points,lag),lsmCurve:buildSample(points,lsm.predict),metrics:getMetrics(points,lsm.predict)};
+};
+function updateEditor(){
+  $('#points-input').value=sets[selected].map(p=>`${p.x}, ${p.y}`).join('\n');
+  $('#input-error').textContent='';
+}
+function updateMini() {
+  $('#six-charts').innerHTML='';
+  for (const count of [5,10,20]) {
+    const m=model(count);
+    for (const kind of ['lag','lsm']) {
+      const card=document.createElement('article');
+      card.className='mini-card';
+      card.innerHTML=`<div class="mini-header"><strong>${kind==='lag'?'Лагранж':'МНК'} · ${count} точок</strong><span>${kind==='lag'?'Інтерполяція':`Поліном ${degree}-го ступеня`}</span></div><div class="chart-holder"></div>`;
+      $('#six-charts').appendChild(card);
+      drawChart(card.querySelector('.chart-holder'),{
+        points:m.points, lagSample:kind==='lag'?m.lagCurve:[], lsmSample:kind==='lsm'?m.lsmCurve:[],
+        mode:kind,small:true, predict:m.lsm.predict, residualProgress:0
+      });
+    }
+  }
+}
+function updateMetrics(){
+  const rows=[];
+  for(const count of [5,10,20]){
+    const m=model(count);
+    rows.push(`<tr class="${count===selected?'selected':''}"><td>${count}</td><td>${format(m.metrics.rmse)}</td><td>${format(m.metrics.mae)}</td><td>${format(m.metrics.r2)}</td></tr>`);
+  }
+  $('#metrics-body').innerHTML=rows.join('');
+}
+function updateMain(){
+  const m=model(selected);
+  $('#chart-size').textContent=selected;
+  $('#stat-count').textContent=selected;
+  const extra=m.points.filter(p=>p.origin==='calculated').length;
+  $('#stat-type').textContent=extra ? `${selected-extra} первинних + ${extra} розрахункові` : m.points.some(p=>p.origin==='custom')?'Власні дані':'Первинні дані';
+  $('#stat-rmse').textContent=format(m.metrics.rmse);
+  $('#stat-r2').textContent=format(m.metrics.r2);
+  $('#stat-max').textContent=format(m.metrics.maxError);
+  const cs=m.lsm.coefficients.map((c,i)=>`${i===0?'':c>=0?'+ ':'− '}${format(Math.abs(c),4)}${i?`·t${i===1?'':`^${i}`}`:''}`).join(' ');
+  $('#model-formula').textContent=`ŷ = ${cs};  t = (x − ${format(m.lsm.center,2)}) / ${format(m.lsm.scale,2)}`;
+  drawChart($('#main-chart'),{...m,lagSample:m.lagCurve,lsmSample:m.lsmCurve,mode,predict:m.lsm.predict,residualProgress:1});
+  drawResidual($('#residual-chart'),m.points,m.lsm.predict);
+  $('#animation-status').textContent='Готово до дослідження';
+}
+function stop(){token++;$('#animation-status').textContent='Готово до дослідження';}
+function redraw(){stop();updateMain();updateMini();updateMetrics();}
+$('.segmented').addEventListener('click',event=>{
+  const btn=event.target.closest('button[data-size]');if(!btn)return;
+  selected=Number(btn.dataset.size);
+  document.querySelectorAll('.seg').forEach(b=>{b.classList.toggle('active',b===btn);b.setAttribute('aria-pressed',String(b===btn));});
+  updateEditor();redraw();
+});
+$('#degree').addEventListener('change',e=>{degree=Number(e.target.value);redraw();});
+$('#method').addEventListener('change',e=>{mode=e.target.value;redraw();});
+$('#apply-points').addEventListener('click',()=>{
+  try{const pts=parsePoints($('#points-input').value,selected);sets[selected]=pts;redraw();updateEditor();}
+  catch(e){$('#input-error').textContent=e.message;}
+});
+$('#reset-data').addEventListener('click',()=>{sets[selected]=initialSets()[selected];updateEditor();redraw();});
+$('#stop-animation').addEventListener('click',()=>{redraw();});
+function startAnimation(kind){
+  stop(); const myToken=token;
+  const {points,lsm,lagCurve,lsmCurve}=model(selected),start=performance.now();
+  const D=kind==='lag'?points.length*490+450:3300;
+  mode=kind;$('#method').value=kind;
+  function frame(now){
+    if(myToken!==token)return;
+    const elapsed=Math.max(0,now-start),progress=Math.min(1,elapsed/D);
+    if(kind==='lag'){
+      const advance=Math.min(points.length,Math.max(1,1+Math.floor(elapsed/490)));
+      const phase=Math.min(1,(elapsed%490)/490);
+      const alpha=phase*phase*(3-2*phase); // плавна функція переходу
+      const current=points.slice(0,advance);
+      const previous=points.slice(0,Math.max(1,advance-1));
+      const from=previous.length===1 ? ()=>previous[0].y : createLagrange(previous);
+      const to=current.length===1 ? ()=>current[0].y : createLagrange(current);
+      const curve=lagCurve.map(p=>({x:p.x,y:from(p.x)*(1-alpha)+to(p.x)*alpha}));
+      drawChart($('#main-chart'),{points,visibleCount:advance,lagSample:curve,lsmSample:[],mode:'lag',predict:lsm.predict,activeIndex:advance-1,residualProgress:0});
+      $('#animation-status').textContent=`Покрокова інтерполяція: ${advance} / ${points.length} вузлів`;
+    } else {
+      const eased=1-Math.pow(1-progress,3);
+      drawChart($('#main-chart'),{points,lagSample:[],lsmSample:lsmCurve,mode:'lsm',predict:lsm.predict,lsmProgress:eased,residualProgress:Math.max(0,(progress-.28)/.72)});
+      $('#animation-status').textContent=`Побудова МНК: ${Math.round(100*progress)} %`;
+    }
+    if(progress<1)requestAnimationFrame(frame);
+    else $('#animation-status').textContent=kind==='lag'?'Інтерполяція завершена':'МНК: побудову завершено';
+  }
+  requestAnimationFrame(frame);
+}
+$('#animate-lag').addEventListener('click',()=>startAnimation('lag'));
+$('#animate-lsm').addEventListener('click',()=>startAnimation('lsm'));
+$('#download-metrics').addEventListener('click',()=>{
+  const header='Набір;RMSE;MAE;R²;SSE;Макс. відхилення';
+  const lines=[header];
+  for(const count of [5,10,20]){const x=model(count).metrics;lines.push([count,x.rmse,x.mae,x.r2,x.sse,x.maxError].join(';'));}
+  const blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lr1_metrics_variant1.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+});
+updateEditor();redraw();
+
+</script></body>
+</html>

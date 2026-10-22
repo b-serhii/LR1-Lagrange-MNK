@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F6F8FC">
+  <meta name="description" content="Лабораторна робота №1: інтерактивне порівняння інтерполяції Лагранжа та МНК для 5, 10 і 20 точок.">
+  <title>Апроксимація функцій · ЛР № 1</title>
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="module" defer src="./src/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="mark" aria-hidden="true">f<span>(x)</span></div>
+      <div class="brand"><strong>Лабораторна № 1</strong><small>Чисельні методи · Варіант 1</small></div>
+      <div class="spacer"></div>
+      <span class="top-badge">Бойог Сергій Степанович</span>
+    </div>
+  </header>
+  <main class="container">
+    <section class="intro">
+      <p class="eyebrow">ІНТЕРАКТИВНА ЛАБОРАТОРІЯ</p>
+      <div class="title-line"><div><h1>Інтерполяція та апроксимація</h1><p>Дослідження полінома Лагранжа і методу найменших квадратів на однакових даних.</p></div><div class="intro-bubble" aria-hidden="true">∑</div></div>
+    </section>
+    <div id="info-notice" class="notice"><span aria-hidden="true">ⓘ</span><div><strong>Примітка до вихідних даних</strong><p>В Excel-аркуші «10 точок» для варіанта 1 фактично 8 пар. Ще 2 точки (8; 11,39) і (9; 12,68) розраховано лінійним МНК і позначено золотистим кольором.</p></div></div>
+    <section class="toolbar" aria-label="Налаштування дослідження">
+      <div class="toolbar-section"><label>Кількість точок</label><div class="segmented" role="group" aria-label="Набір даних"><button class="seg active" data-size="5" aria-pressed="true">5</button><button class="seg" data-size="10" aria-pressed="false">10</button><button class="seg" data-size="20" aria-pressed="false">20</button></div></div>
+      <div class="toolbar-section"><label for="method">Режим відображення</label><select id="method"><option value="both">Усі методи</option><option value="lag">Інтерполяція</option><option value="lsm">МНК</option></select></div>
+      <div class="toolbar-section"><label for="degree">Ступінь полінома МНК</label><select id="degree"><option value="1">1 — лінійний</option><option value="2" selected>2 — квадратичний</option><option value="3">3 — кубічний</option><option value="4">4 — четвертого ступеня</option></select></div>
+      <div class="toolbar-section toolbar-actions"><label>Анімація</label><div class="actions"><button class="button secondary" id="animate-lag"><span>▶</span> Лагранж</button><button class="button secondary" id="animate-lsm"><span>▶</span> МНК</button><button class="button ghost" id="stop-animation" title="Зупинити анімацію">■</button></div></div>
+    </section>
+    <section class="stats" aria-live="polite">
+      <div class="stat"><span>Вузлів вибірки</span><strong id="stat-count">5</strong><small id="stat-type">Первинні дані</small></div>
+      <div class="stat"><span>RMSE · МНК</span><strong id="stat-rmse">—</strong><small>Середньоквадратична похибка</small></div>
+      <div class="stat"><span>R² · МНК</span><strong id="stat-r2">—</strong><small>Якість наближення</small></div>
+      <div class="stat"><span>Максимальна похибка · МНК</span><strong id="stat-max">—</strong><small>Абсолютне відхилення</small></div>
+    </section>
+    <section class="panel main-plot">
+      <div class="panel-top"><div><p class="section-kicker">ДЕТАЛЬНИЙ ПЕРЕГЛЯД</p><h2>Графік для <span id="chart-size">5</span> точок</h2></div><span id="animation-status" class="label-muted">Готово до дослідження</span></div>
+      <div id="main-chart" class="chart-holder"></div>
+      <div class="legend"><span><i class="legend-dot original"></i> Вихідні точки</span><span><i class="legend-line lag"></i> Поліном Лагранжа</span><span><i class="legend-line lsm"></i> Поліном МНК</span><span><i class="legend-line residual"></i> Відхилення</span><span><i class="legend-dot synthetic"></i> Обчислені точки</span></div>
+      <div class="plot-footer">Масштаб X та Y визначається автоматично за видимими даними та кривими. Наведіть курсор на точки, щоб переглянути координати й залишки.</div>
+    </section>
+    <section class="section-heading"><div><p class="section-kicker">ЗІСТАВЛЕННЯ РЕЗУЛЬТАТІВ</p><h2>Усі 6 графіків</h2><p>Для кожного набору побудовано окремі графіки інтерполяції та МНК.</p></div><span class="small-tag">3 вибірки × 2 методи</span></section>
+    <section class="mini-grid" id="six-charts" aria-label="Шість порівняльних графіків"></section>
+    <section class="two-column">
+      <article class="panel"><div class="panel-top"><div><p class="section-kicker">ПОХИБКИ МОДЕЛІ</p><h2>Залишки МНК</h2></div></div><div id="residual-chart" class="chart-holder"></div><p class="muted">Вертикальна лінія показує різницю y − ŷ для кожної точки.</p></article>
+      <article class="panel metrics"><div class="panel-top"><div><p class="section-kicker">АНАЛІТИЧНЕ ТЕСТУВАННЯ</p><h2>Порівняння вибірок</h2></div><button class="button linklike" id="download-metrics">↓ CSV</button></div><div class="table-wrap"><table><thead><tr><th>Точок</th><th>RMSE</th><th>MAE</th><th>R²</th></tr></thead><tbody id="metrics-body"></tbody></table></div><p class="muted">Обчислення виконуються незалежно для кожної вибірки за обраним ступенем МНК.</p><div class="formula"><span>Модель МНК</span><code id="model-formula">—</code></div></article>
+    </section>
+    <section class="panel editor-panel">
+      <div class="panel-top"><div><p class="section-kicker">ВХІДНІ ДАНІ</p><h2>Перегляд і редагування точок</h2></div><button class="button linklike" id="reset-data">↺ Відновити варіант</button></div>
+      <p class="muted">Кожний рядок: <code>x, y</code>. Можна ввести власні координати, кількість має збігатися з вибраною (5, 10 або 20). Усі x повинні бути різними.</p>
+      <div class="editor-wrap"><textarea id="points-input" spellcheck="false" rows="9" aria-label="Координати точок"></textarea><div class="editor-aside"><h3>Порядок роботи</h3><ol><li>Оберіть набір 5, 10 або 20 точок.</li><li>Перегляньте побудовані графіки.</li><li>Змініть ступінь полінома МНК.</li><li>Запустіть покрокову анімацію.</li><li>За потреби внесіть власні дані.</li></ol><button class="button primary" id="apply-points">Застосувати точки →</button><p id="input-error" class="validation" role="alert"></p></div></div>
+    </section>
+    <footer><div>Лабораторна робота № 1 · Варіант 1 · ІПЗ-4</div><div>HTML · CSS · JavaScript · QR-розкладання</div></footer>
+  </main>
+</body>
+</html>
